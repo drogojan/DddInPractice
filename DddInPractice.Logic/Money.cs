@@ -1,13 +1,23 @@
-﻿namespace DddInPractice.Logic
+﻿using System;
+
+namespace DddInPractice.Logic
 {
     public sealed class Money : ValueObject<Money>
     {
-        public int OneCentCount { get; private set; }
-        public int TenCentCount { get; private set; }
-        public int QuarterCount { get; private set; }
-        public int OneDollarCount { get; private set; }
-        public int FiveDollarCount { get; private set; }
-        public int TwentyDollarCount { get; private set; }
+        public int OneCentCount { get; }
+        public int TenCentCount { get; }
+        public int QuarterCount { get; }
+        public int OneDollarCount { get; }
+        public int FiveDollarCount { get; }
+        public int TwentyDollarCount { get; }
+
+        public object Amount => 
+            OneCentCount * 0.01m +
+            TenCentCount * 0.1m +
+            QuarterCount * 0.25m + 
+            OneDollarCount +
+            FiveDollarCount * 5 +
+            TwentyDollarCount * 20;
 
         public Money(
             int oneCentCount,
@@ -17,6 +27,19 @@
             int fiveDollarCount,
             int twentyDollarCount)
         {
+            if(oneCentCount < 0)
+                throw new InvalidOperationException();
+            if (tenCentCount < 0)
+                throw new InvalidOperationException();
+            if (quarterCount < 0)
+                throw new InvalidOperationException();
+            if (oneDollarCount < 0)
+                throw new InvalidOperationException();
+            if (fiveDollarCount < 0)
+                throw new InvalidOperationException();
+            if (twentyDollarCount < 0)
+                throw new InvalidOperationException();
+
             OneCentCount += oneCentCount;
             TenCentCount += tenCentCount;
             QuarterCount += quarterCount;
@@ -25,18 +48,32 @@
             TwentyDollarCount += twentyDollarCount;
         }
 
-        public static Money operator +(Money firstAmount, Money secondAmount)
+        public static Money operator +(Money money1, Money money2)
         {
             var sum = new Money(
-                firstAmount.OneCentCount + secondAmount.OneCentCount,
-                firstAmount.TenCentCount + secondAmount.TenCentCount,
-                firstAmount.QuarterCount + secondAmount.QuarterCount,
-                firstAmount.OneDollarCount + secondAmount.OneDollarCount,
-                firstAmount.FiveDollarCount + secondAmount.FiveDollarCount,
-                firstAmount.TwentyDollarCount + secondAmount.TwentyDollarCount
+                money1.OneCentCount + money2.OneCentCount,
+                money1.TenCentCount + money2.TenCentCount,
+                money1.QuarterCount + money2.QuarterCount,
+                money1.OneDollarCount + money2.OneDollarCount,
+                money1.FiveDollarCount + money2.FiveDollarCount,
+                money1.TwentyDollarCount + money2.TwentyDollarCount
                 );
 
             return sum;
+        }
+
+        public static Money operator -(Money money1, Money money2)
+        {
+            var difference = new Money(
+                money1.OneCentCount - money2.OneCentCount,
+                money1.TenCentCount - money2.TenCentCount,
+                money1.QuarterCount - money2.QuarterCount,
+                money1.OneDollarCount - money2.OneDollarCount,
+                money1.FiveDollarCount - money2.FiveDollarCount,
+                money1.TwentyDollarCount - money2.TwentyDollarCount
+            );
+
+            return difference;
         }
 
         protected override bool EqualsCore(Money other)
@@ -48,7 +85,6 @@
                    && FiveDollarCount == other.FiveDollarCount
                    && TwentyDollarCount == other.TwentyDollarCount;
         }
-
         protected override int GetHashCodeCore()
         {
             unchecked
