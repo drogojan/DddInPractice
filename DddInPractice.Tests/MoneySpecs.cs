@@ -86,7 +86,7 @@ namespace DddInPractice.Tests
             int oneDollarCount,
             int fiveDollarCount,
             int twentyDollarCount,
-            double expectedAmount)
+            decimal expectedAmount)
         {
             Money money = new Money(
                 oneCentCount,
@@ -96,7 +96,7 @@ namespace DddInPractice.Tests
                 fiveDollarCount,
                 twentyDollarCount);
 
-            money.Amount.Should().BeEquivalentTo(expectedAmount);
+            money.Amount.Should().Be(expectedAmount);
         }
 
         [Fact]
@@ -127,6 +127,33 @@ namespace DddInPractice.Tests
             };
 
             action.Should().Throw<InvalidOperationException>();
+        }
+
+        [Theory]
+        [InlineData(1, 0, 0, 0, 0, 0, "¢1")]
+        [InlineData(4, 2, 3, 0, 0, 0, "¢99")]
+        [InlineData(5, 2, 3, 0, 0, 0, "$1.00")]
+        [InlineData(1, 0, 0, 1, 0, 0, "$1.01")]
+        [InlineData(0, 0, 2, 1, 0, 0, "$1.50")]
+        [InlineData(0, 0, 0, 1, 1, 1, "$26.00")]
+        public void ToString_returns_amount_of_money(
+            int oneCentCount,
+            int tenCentCount,
+            int quarterCount,
+            int oneDollarCount,
+            int fiveDollarCount,
+            int twentyDollarCount,
+            string expectedString)
+        {
+            Money money = new Money(
+                oneCentCount,
+                tenCentCount,
+                quarterCount,
+                oneDollarCount,
+                fiveDollarCount,
+                twentyDollarCount);
+
+            money.ToString().Should().Be(expectedString);
         }
     }
 }

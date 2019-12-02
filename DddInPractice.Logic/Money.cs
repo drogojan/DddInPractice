@@ -18,7 +18,7 @@ namespace DddInPractice.Logic
         public int FiveDollarCount { get; }
         public int TwentyDollarCount { get; }
 
-        public object Amount => 
+        public decimal Amount => 
             OneCentCount * 0.01m +
             TenCentCount * 0.1m +
             QuarterCount * 0.25m + 
@@ -105,6 +105,16 @@ namespace DddInPractice.Logic
 
                 return hashCode;
             }
+        }
+
+        public override string ToString()
+        {
+            if (this.Amount < 1)
+            {
+                return "¢" + (this.Amount * 100).ToString("0");
+            }
+
+            return "$" + (this.Amount).ToString("0.00");
         }
     }
 }
