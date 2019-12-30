@@ -1,4 +1,6 @@
 ﻿using DddInPractice.Logic;
+using NHibernate;
+
 //using NHibernate;
 
 namespace DddInPractice.UI.Common
@@ -9,10 +11,10 @@ namespace DddInPractice.UI.Common
         {
             SnackMachine snackMachine;
             snackMachine = new SnackMachine();
-//            using (ISession session = SessionFactory.OpenSession())
-//            {
-//                snackMachine = session.Get<SnackMachine>(1L);
-//            }
+            using (ISession session = SessionFactory.OpenSession())
+            {
+                snackMachine = session.Get<SnackMachine>(1L);
+            }
             var viewModel = new SnackMachineViewModel(snackMachine);
             _dialogService.ShowDialog(viewModel);
         }

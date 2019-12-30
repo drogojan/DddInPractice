@@ -13,5 +13,9 @@ namespace DddInPractice.UI
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            Initer.Init(@"Server=(localdb)\mssqllocaldb;Database=DddInPractice;Trusted_Connection=True;");
+        }
     }
 }

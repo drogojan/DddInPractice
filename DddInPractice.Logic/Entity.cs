@@ -1,10 +1,11 @@
 ﻿using System;
+using NHibernate.Proxy;
 
 namespace DddInPractice.Logic
 {
     public abstract class Entity
     {
-        public long Id { get; private set; }
+        public virtual long Id { get; protected set; }
 
         public override bool Equals(object obj)
         {
@@ -12,7 +13,8 @@ namespace DddInPractice.Logic
 
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
-            if (other.GetType() != this.GetType()) return false;
+            //if (other.GetType() != this.GetType()) return false;
+            if (other.GetRealType() != this.GetRealType()) return false;
             if (Id == 0 || other.Id == 0) return false;
 
             return Id == other.Id;
@@ -20,7 +22,8 @@ namespace DddInPractice.Logic
 
         public override int GetHashCode()
         {
-            return (GetType().ToString() + Id).GetHashCode();
+            //return (GetType().ToString() + Id).GetHashCode();
+            return (GetRealType().ToString() + Id).GetHashCode();
         }
 
         public static bool operator ==(Entity left, Entity right)
@@ -37,6 +40,11 @@ namespace DddInPractice.Logic
         public static bool operator !=(Entity left, Entity right)
         {
             return !(left == right);
+        }
+
+        private Type GetRealType()
+        {
+            return NHibernateProxyHelper.GetClassWithoutInitializingProxy(this);
         }
     }
 }
