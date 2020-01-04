@@ -2,6 +2,7 @@
 using DddInPractice.Logic;
 using FluentAssertions;
 using Xunit;
+using static DddInPractice.Logic.Snack;
 
 namespace DddInPractice.Tests
 {
@@ -12,7 +13,7 @@ namespace DddInPractice.Tests
         {
             Action action = () =>
             {
-                new SnackPile(new Snack("Chips"), -1, 1m);
+                new SnackPile(Chocolate, -1, 1m);
             };
 
             action.Should().Throw<InvalidOperationException>();
@@ -23,7 +24,7 @@ namespace DddInPractice.Tests
         {
             Action action = () =>
             {
-                new SnackPile(new Snack("Chips"), 1, -1m);
+                new SnackPile(Chocolate, 1, -1m);
             };
 
             action.Should().Throw<InvalidOperationException>();
@@ -34,7 +35,7 @@ namespace DddInPractice.Tests
         {
             Action action = () =>
             {
-                new SnackPile(new Snack("Chips"), 1, 0.001m);
+                new SnackPile(Chocolate, 1, 0.001m);
             };
 
             action.Should().Throw<InvalidOperationException>();

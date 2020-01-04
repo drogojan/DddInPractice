@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FluentNHibernate;
 using FluentNHibernate.Mapping;
 
 namespace DddInPractice.Logic
@@ -20,6 +21,8 @@ namespace DddInPractice.Logic
                 y.Map(x => x.FiveDollarCount);
                 y.Map(x => x.TwentyDollarCount);
             });
+
+            HasMany<Slot>(Reveal.Member<SnackMachine>("Slots")).Cascade.SaveUpdate().Not.LazyLoad();
         }
     }
 }
